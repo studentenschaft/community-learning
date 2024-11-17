@@ -1,0 +1,12 @@
+*~
+.venv
+venv
+.idea
+.vscode
+.DS_Store
+__pycache__
+temp-gen
+data
+.envrc
+shell.nix
+.direnv

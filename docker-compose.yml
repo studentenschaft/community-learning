@@ -1,0 +1,121 @@
+version: "3.7"
+
+services:
+  minio:
+    image: minio/minio:RELEASE.2023-10-25T06-33-25Z
+    container_name: minio
+    environment:
+      - MINIO_ACCESS_KEY=minio
+      - MINIO_SECRET_KEY=minio123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data/minio:/export
+    command: server /export --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-I", "localhost:9000/minio/health/live"]
+      interval: 1s
+      timeout: 1s
+      retries: 20
+  createbuckets:
+    image: minio/mc:RELEASE.2023-10-24T21-42-22Z
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c " /usr/bin/mc config host add myminio http://minio:9000 minio minio123; /usr/bin/mc mb myminio/community-solutions; "
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_USER=docker
+    volumes:
+      - ./data/sql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d docker -U docker"]
+      interval: 1s
+      timeout: 1s
+      retries: 50
+  community-solutions:
+    build:
+      target: backend-hotreload
+      args:
+        git_branch: <docker>
+        git_commit: <compose>
+    develop:
+      watch:
+        - action: sync
+          path: backend/
+          target: /app
+          ignore:
+            - __pycache__/
+        - action: rebuild
+          path: backend/requirements.txt
+    container_name: community-solutions
+    ports:
+      - "8081:8081"
+    environment:
+      - SIP_INGRESS_HTTP_DEFAULT_DEPLOYMENT_DOMAIN=localhost
+      - SIP_INGRESS_HTTP_DEFAULT_CNAMES=
+
+      - SIP_POSTGRES_DB_SERVER=postgres
+      - SIP_POSTGRES_DB_PORT=5432
+      - SIP_POSTGRES_DB_NAME=postgres
+      - SIP_POSTGRES_DB_USER=docker
+      - SIP_POSTGRES_DB_PW=docker
+
+      - SIP_S3_FILES_HOST=minio
+      - SIP_S3_FILES_PORT=9000
+      - SIP_S3_FILES_ACCESS_KEY=minio
+      - SIP_S3_FILES_SECRET_KEY=minio123
+      - SIP_S3_FILES_BUCKET=community-solutions
+      - SIP_S3_FILES_USE_SSL=false
+
+      - RUNTIME_COMMUNITY_SOLUTIONS_SESSION_SECRET=42
+      - RUNTIME_COMMUNITY_SOLUTIONS_API_KEY=42
+
+      - RUNTIME_FRONTEND_KEYCLOAK_URL=https://auth.vseth.ethz.ch/auth
+      - RUNTIME_FRONTEND_KEYCLOAK_REALM=VSETH
+
+      - SIP_AUTH_OIDC_CLIENT_ID=vis_cat_staging_community_solutions_oidc
+      - SIP_AUTH_OIDC_CLIENT_SECRET=AWrTAardsNOxlCAzekwWXuARD
+
+      - FRONTEND_TITLE_PREFIX=prefix
+      - FRONTEND_TITLE_SUFFIX=suffix
+      - FRONTEND_FAVICON_URL=favicon
+      - FRONTEND_EMAIL_ADDRESS=nothing@localhost
+
+      - SIP_AUTH_OIDC_AUTH_ENDPOINT=https://auth.vseth.ethz.ch/auth/realms/VSETH/protocol/openid-connect/auth
+      - SIP_AUTH_OIDC_TOKEN_ENDPOINT=https://auth.vseth.ethz.ch/auth/realms/VSETH/protocol/openid-connect/token
+
+      - PDEP_IS_PREVIEW=TRUE
+    depends_on:
+      postgres:
+          condition: service_healthy
+      minio:
+          condition: service_healthy
+
+  react-frontend:
+    profiles: [frontend] # only executed if the '--profile frontend' flag is given
+    build:
+      target: frontend-dev
+      args:
+        git_branch: <docker>
+        git_commit: <compose>
+    develop:
+      watch:
+        - action: sync
+          path: frontend/src
+          target: /app/src
+        - action: rebuild
+          path: frontend/package.json
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "minio:127.0.0.1"
+    environment:
+      - BACKEND_HOST=community-solutions
