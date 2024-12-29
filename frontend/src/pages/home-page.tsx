@@ -142,7 +142,7 @@ const HomePage: React.FC<{}> = () => {
   return (
     <>
       <Container size="xl">
-        <Title mb="sm">Community Solutions</Title>
+        <Title mb="sm">Community Learning by SHSG</Title>
       </Container>
       <CategoryList />
     </>
