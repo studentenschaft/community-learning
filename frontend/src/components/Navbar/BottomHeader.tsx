@@ -6,6 +6,7 @@ import ExternalNavElement from "./ExternalNav";
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import classes from "./BottomHeader.module.css";
+import ColorSchemeToggle from "../color-scheme-toggle";
 
 interface Props {
   lang: "en" | "de" | string;
@@ -23,7 +24,11 @@ const BottomHeader: React.FC<Props> = ({
   size,
 }) => {
   return (
-    <Container visibleFrom="md" className={classes.navbar} fluid={true}>
+    <Container
+      visibleFrom="md"
+      className={classes.navbar}
+      fluid={true}
+    >
       <Container size={size ? size : "md"} className={classes.container}>
         <Link to={""} className={classes.title}>
           {title}
@@ -46,6 +51,7 @@ const BottomHeader: React.FC<Props> = ({
               />
             );
           })}
+          <ColorSchemeToggle />
           {loginButton}
         </Group>
       </Container>
