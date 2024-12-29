@@ -193,7 +193,6 @@ const App: React.FC<{}> = () => {
       childItems: [
         { title: "FAQ", href: "/faq" },
         { title: "Feedback", href: "/feedback" },
-        { title: "Submit Transcript", href: "/submittranscript" },
         ...(typeof user === "object" && user.isCategoryAdmin ? adminItems : []),
       ],
     },
@@ -262,7 +261,7 @@ const App: React.FC<{}> = () => {
                   signet={data.signet ?? defaultConfigOptions.signet}
                   selectedLanguage={"en"}
                   appNav={bottomHeaderNav}
-                  title={"Community Solutions"}
+                  title={"Community Learning"}
                 />
                 <Box component="main" mt="2em">
                   <Switch>
