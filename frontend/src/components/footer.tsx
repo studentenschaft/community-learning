@@ -39,33 +39,26 @@ const Footer: React.FC<FooterProps> = ({ logo, disclaimer, privacy }) => {
               flex: 1,
             }}
           >
-            Made with
-            <IconHeartFilled
-              style={{
-                position: "relative",
-                top: 2,
-                color: "red",
-                margin: "0px 4px",
-                height: "15px",
-                width: "15px",
-              }}
-            />
-            by volunteers at{" "}
+            Made by volunteers at{" "}
             <Anchor
               fw="bold"
               href="https://vis.ethz.ch/"
               title="Verein der Informatikstudierenden an der ETH Zürich"
               c="blue"
             >
-              VIS
+              VIS{" "}
+            </Anchor>
+              and{" "}
+            <Anchor
+              fw="bold"
+              href="https://shsg.ch"
+              title="Studentenschaft Hochschule St. Gallen"
+              c="blue"
+            >
+               SHSG
             </Anchor>
           </Text>
-          <img
-            height={32}
-            src={logo}
-            style={{ filter: "brightness(0)" }}
-            alt="Logo of the student organization"
-          />
+
           <Group
             style={{
               flex: 1,
