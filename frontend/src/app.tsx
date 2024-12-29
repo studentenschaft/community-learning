@@ -43,7 +43,6 @@ import UploadTranscriptPage from "./pages/submittranscript-page";
 import UploadPdfPage from "./pages/uploadpdf-page";
 import UserPage from "./pages/userinfo-page";
 import { useRequest } from "@umijs/hooks";
-import TopHeader from "./components/Navbar/TopHeader";
 import BottomHeader from "./components/Navbar/BottomHeader";
 import MobileHeader from "./components/Navbar/MobileHeader";
 import Footer from "./components/footer";
@@ -253,19 +252,10 @@ const App: React.FC<{}> = () => {
           <SetUserContext.Provider value={setUser}>
             <div>
               <div>
-                <TopHeader
-                  logo={data.logo ?? defaultConfigOptions.logo}
-                  size="xl"
-                  organizationNav={
-                    data.externalNav ?? defaultConfigOptions.externalNav
-                  }
-                  selectedLanguage={"en"}
-                  onLanguageSelect={() => {}}
-                />
                 <BottomHeader
                   lang={"en"}
                   appNav={bottomHeaderNav}
-                  title={"Community Solutions"}
+                  title={"Community Learning"}
                   size="xl"
                 />
                 <MobileHeader
