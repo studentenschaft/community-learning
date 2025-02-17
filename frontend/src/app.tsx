@@ -184,7 +184,6 @@ const App: React.FC<{}> = () => {
     { title: "Upload Exam", href: "/uploadpdf" },
     { title: "Mod Queue", href: "/modqueue" },
   ];
-
   const bottomHeaderNav = [
     { title: "Home", href: "/" },
     { title: "Scoreboard ", href: "/scoreboard" },
@@ -258,7 +257,7 @@ const App: React.FC<{}> = () => {
                   size="xl"
                 />
                 <MobileHeader
-                  signet={data.signet ?? defaultConfigOptions.signet}
+                  signet="https://biddit.app/static/media/SHSG_Logo_Icon_Title_small_white.79a3fc7c.png"
                   selectedLanguage={"en"}
                   appNav={bottomHeaderNav}
                   title={"Community Learning"}

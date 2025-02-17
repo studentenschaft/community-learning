@@ -1,4 +1,5 @@
 .navItem {
+  color: var(--mantine-color-white);
   padding-left: 0rem;
   padding-right: 0rem;
   text-align: right;
@@ -9,7 +10,7 @@
   text-transform: uppercase;
   font-weight: 500;
 
-  @media (max-width: $mantine-breakpoint-md) {
+  @media (max-width: mantine-breakpoint-md) {
     text-align: left;
     display: block;
   }

@@ -25,7 +25,7 @@ const ColorSchemeToggle = () => {
       ) : (
         <IconMoon
           style={{
-            color: "var(--mantine-color-black)", // Moon icon is black in light mode
+            color: "var(--mantine-color-white)", // Moon icon is black in light mode
           }}
         />
       )}

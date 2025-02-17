@@ -14,7 +14,6 @@
 }
 
 .logo {
-  filter: invert() contrast(234234);
   height: 2rem;
   padding-right: 1.25rem;
 }
@@ -37,4 +36,8 @@
 .mobileLanguage {
   text-transform: uppercase;
   cursor: pointer;
+}
+
+.moreItem {
+  color: white;
 }

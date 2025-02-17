@@ -22,17 +22,25 @@ const BottomHeader: React.FC<Props> = ({
   title,
   loginButton,
   size,
+  signet,
 }) => {
   return (
-    <Container
-      visibleFrom="md"
-      className={classes.navbar}
-      fluid={true}
-    >
+    <Container visibleFrom="md" className={classes.navbar} fluid={true}>
       <Container size={size ? size : "md"} className={classes.container}>
-        <Link to={""} className={classes.title}>
-          {title}
-        </Link>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={
+              signet
+                ? signet
+                : "https://biddit.app/static/media/SHSG_Logo_Icon_Title_small_white.79a3fc7c.png"
+            }
+            alt="Signet of the student organization"
+            className={classes.logo}
+          />
+          <Link to={""} className={classes.title}>
+            {title}
+          </Link>
+        </div>
 
         <Group
           style={{

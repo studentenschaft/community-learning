@@ -36,7 +36,7 @@ const BottomHeader: React.FC<Props> = ({
       hiddenFrom="md"
       className={classes.navbar}
       fluid={true}
-      style={{ backgroundColor: "rgba(51,51,51)" }}
+      style={{ backgroundColor: "rgba(0, 102, 37, 1)" }}
     >
       <Group
         className={classes.logoLine}
@@ -48,7 +48,7 @@ const BottomHeader: React.FC<Props> = ({
             src={
               signet
                 ? signet
-                : "https://static.vseth.ethz.ch/assets/vseth-0000-vseth/signet-mono.svg"
+                : "https://biddit.app/static/media/SHSG_Logo_Icon_Title_small_white.79a3fc7c.png"
             }
             alt="Signet of the student organization"
             className={classes.logo}

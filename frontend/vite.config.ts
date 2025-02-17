@@ -31,4 +31,11 @@ export default defineConfig({
       localsConvention: "camelCaseOnly",
     },
   },
+  optimizeDeps: {
+    exclude: [
+      'chunk-HUYDUIWU.js',
+      'chunk-ERVJ47UR.js',
+      'chunk-CT2WV5HV.js'
+    ]
+  }
 });
