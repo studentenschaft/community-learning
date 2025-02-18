@@ -16,7 +16,18 @@ const makeVsethTheme = (newPrimaryColor?: MantineColorsTuple | string) => {
   ];
   let brand = defaultBrand;
   if (typeof newPrimaryColor === "string") {
-    brand = generateColors(newPrimaryColor);
+    brand = [
+      "#E5F9E5",
+      "#D1F3D1",
+      "#9EE59E",
+      "#6BD86B",
+      "#3DC83D",
+      "#006625", // Sixth value set to green
+      "#006625",
+      "#009E00",
+      "#0A8B0A",
+      "#0E780E",
+    ];
   } else if (newPrimaryColor != undefined) {
     brand = newPrimaryColor;
   }
