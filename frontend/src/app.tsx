@@ -14,15 +14,6 @@ import {
 import "@mantine/core/styles.css";
 import React, { useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
-import {
-  authenticationStatus,
-  fetchGet,
-  getCookie,
-  isTokenExpired,
-  login,
-  minValidity,
-  refreshToken,
-} from "./api/fetch-utils";
 import { notLoggedIn, SetUserContext, User, UserContext } from "./auth";
 import UserRoute from "./auth/UserRoute";
 import { DebugContext, defaultDebugOptions } from "./components/Debug";
@@ -52,74 +43,18 @@ import {
 } from "./components/Navbar/constants";
 import makeVsethTheme from "./makeVsethTheme";
 import { useDisclosure } from "@mantine/hooks";
+import {useAuthService} from "./auth/auth-utils";
+import {useApiService} from "./api/fetch-utils2";
 
 const App: React.FC<{}> = () => {
   const [loggedOut, setLoggedOut] = useState(false);
-  useEffect(() => {
-    let cancel = false;
-    // How often refreshing failed
-    let counter = 0;
-    let counterExp = getCookie("token_expires");
+  const apiService = useApiService();
 
-    let handle: ReturnType<typeof setTimeout> | undefined = undefined;
-    const startTimer = () => {
-      // Check whether we have a token and when it will expire;
-      const exp = authenticationStatus();
-      if (
-        isTokenExpired(exp) &&
-        !(counterExp === getCookie("token_expires") && counter > 5)
-      ) {
-        refreshToken().then(r => {
-          if (cancel) return;
-          // If the refresh was successful we are happy
-          if (r.status >= 200 && r.status < 400) {
-            setLoggedOut(false);
-            counter = 0;
-            return;
-          }
-
-          // Otherwise it probably failed
-          setLoggedOut(true);
-          if (counter === 0) {
-            counterExp = getCookie("token_expires");
-          }
-          counter++;
-          return;
-        });
-      }
-      // When we are authenticated (`exp !== undefined`) we want to refresh the token
-      // `minValidity` seconds before it expires. If there's no token we recheck this
-      // condition every 10 seconds.
-      // `Math.max` ensures that we don't call startTimer too often.
-      const delay =
-        exp !== undefined ? Math.max(3_000, exp - 1000 * minValidity) : 60_000;
-      handle = setTimeout(() => {
-        startTimer();
-      }, delay);
-    };
-    startTimer();
-
-    return () => {
-      cancel = true;
-      if (handle === undefined) return;
-      clearTimeout(handle);
-    };
-  }, []);
-
-  useEffect(() => {
-    // We need to manually get the csrf cookie when the frontend is served using
-    // `yarn start` as only certain pages will set the csrf cookie.
-    // Technically the application won't work until the promise resolves, but we just
-    // hope that the user doesn't do anything in that time.
-    if (getCookie("csrftoken") === null) {
-      fetchGet("/api/can_i_haz_csrf_cookie/");
-    }
-  }, []);
   const [user, setUser] = useState<User | undefined>(undefined);
   useEffect(() => {
     let cancelled = false;
     if (user === undefined) {
-      fetchGet("/api/auth/me/").then(
+      apiService.fetchGet("/api/auth/me/").then(
         res => {
           if (cancelled) return;
           setUser({
@@ -144,7 +79,7 @@ const App: React.FC<{}> = () => {
   const [debugOptions, setDebugOptions] = useState(defaultDebugOptions);
 
   const loadUnreadCount = async () => {
-    return (await fetchGet("/api/notification/unreadcount/")).value as number;
+    return (await apiService.fetchGet("/api/notification/unreadcount/")).value as number;
   };
   const { data: unreadCount } = useRequest(loadUnreadCount, {
     pollingInterval: 300_000,
@@ -229,18 +164,20 @@ const App: React.FC<{}> = () => {
     },
   });
 
+  const { handleLogin } = useAuthService();
+
   return (
     <MantineProvider theme={fvTheme} cssVariablesResolver={resolver}>
       <Modal
         opened={loggedOut}
-        onClose={() => login()}
+        onClose={() => handleLogin()}
         title="You've been logged out due to inactivity"
       >
         <Text mb="md">
           Your session has expired due to inactivity, you have to log in again
           to continue.
         </Text>
-        <Button size="lg" variant="outline" onClick={() => login()}>
+        <Button size="lg" variant="outline" onClick={() => console.log("Login")}>
           Sign in with AAI
         </Button>
       </Modal>

@@ -1,8 +1,11 @@
 import { Button, Flex, Text } from "@mantine/core";
 import React from "react";
-import { login } from "../api/fetch-utils";
+import {useAuthService} from "../auth/auth-utils";
 
 const LoginOverlay: React.FC<{}> = () => {
+
+  const { handleLogin } = useAuthService();
+
   return (
     <Flex
       align="center"
@@ -23,7 +26,7 @@ const LoginOverlay: React.FC<{}> = () => {
         <Button
           size="lg"
           variant="outline"
-          onClick={() => login()}
+          onClick={() => handleLogin()}
         >
           Sign in with AAI
         </Button>

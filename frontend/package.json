@@ -4,6 +4,8 @@
   "type": "module",
   "private": true,
   "dependencies": {
+    "@azure/msal-browser": "^2.16.1",
+    "@azure/msal-react": "^1.0.1",
     "@mantine/colors-generator": "^7.7.0",
     "@mantine/core": "^7.0.0",
     "@mantine/hooks": "^7.0.0",
