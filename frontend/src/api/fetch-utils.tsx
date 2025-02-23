@@ -1,14 +1,9 @@
 import { ImageHandle } from "../components/Editor/utils/types";
+/*
 
-/**
- * Minimum validity of the access token in seconds when a request to the API starts
- */
 export const minValidity = 10;
 
-let refreshRequest: Promise<Response> | undefined = undefined;
-
 export function authenticationStatus() {
-  const expires = getCookie("token_expires");
   if (expires === null) {
     return undefined;
   }
@@ -17,19 +12,11 @@ export function authenticationStatus() {
   return time - now;
 }
 
-/**
- * Checks whether it would make sense to call `refreshToken()`
- * @returns Returns `true` iff. there is a token and it is expired.
- */
 export function isTokenExpired(expires = authenticationStatus()) {
   if (expires === undefined) return false;
   return expires < minValidity * 1000;
 }
 
-/**
- * Checks whether it makes sense to
- * @returns
- */
 export function authenticated(expires = authenticationStatus()) {
   return expires !== undefined;
 }
@@ -38,45 +25,15 @@ const encodeScopes = (...scopes: string[]) => scopes.join("+");
 
 const scopes = encodeScopes("profile", "openid");
 
-export function login(redirectUrl = window.location.pathname) {
-  window.location.href = `/api/auth/login?scope=${scopes}&rd=${encodeURIComponent(
-    redirectUrl,
-  )}`;
-}
-
-export function logout(redirectUrl = window.location.pathname) {
-  window.location.href = `/api/auth/logout?rd=${encodeURIComponent(
-    redirectUrl,
-  )}`;
-}
-
-export function refreshToken() {
-  if (refreshRequest !== undefined) {
-    return refreshRequest;
-  }
-  refreshRequest = fetch("/api/auth/refresh", {
-    headers: getHeaders(),
-  }).then(req => {
-    refreshRequest = undefined;
-    return req;
-  });
-  return refreshRequest;
-}
-
 export function getHeaders() {
   const headers: Record<string, string> = {
-    "X-CSRFToken": getCookie("csrftoken") || "",
+    "Authorization": `Bearer ${localStorage.getItem("access_token")}`, // hsg token
   };
   if (localStorage.getItem("simulate_nonadmin")) {
     headers["SimulateNonAdmin"] = "true";
   }
   return headers;
 }
-/**
- * `NamedBlob` is essentially a 2-tuple consisting of a `Blob` and a `string` acting as
- * a filename. A `NamedBlob` can be passed to `performDataRequest` if the `Blob` should have
- * a multipart filename attached to it.
- */
 export class NamedBlob {
   constructor(
     public blob: Blob,
@@ -88,7 +45,6 @@ async function performDataRequest<T>(
   url: string,
   data: { [key: string]: any },
 ) {
-  if (isTokenExpired()) await refreshToken();
 
   const formData = new FormData();
   // Convert the `data` object into a `formData` object by iterating
@@ -125,8 +81,9 @@ async function performDataRequest<T>(
   }
 }
 
+//Use from fetch-utils2.tsx
+/*
 async function performRequest<T>(method: string, url: string) {
-  if (isTokenExpired()) await refreshToken();
 
   const response = await fetch(url, {
     credentials: "include",
@@ -175,6 +132,7 @@ export function fetchGet<T = any>(url: string) {
   return performRequest<T>("GET", url);
 }
 
+
 export function download(url: string, name?: string) {
   const a = document.createElement("a");
   document.body.appendChild(a);
@@ -209,3 +167,4 @@ export function imageHandler(file: File): Promise<ImageHandle> {
       .catch(e => reject(e));
   });
 }
+*/
