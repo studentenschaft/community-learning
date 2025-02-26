@@ -2,6 +2,7 @@ import { Route, RouteProps } from "react-router-dom";
 import { useUser } from ".";
 import LoadingOverlay from "../components/loading-overlay";
 import LoginOverlay from "../pages/login-page";
+import React from "react";
 
 const UserRouteContent = <T extends RouteProps>({
   props,
