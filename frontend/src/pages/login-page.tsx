@@ -1,11 +1,48 @@
-import { Container, Flex, Grid, Text } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
+import { useMsal } from "@azure/msal-react";
+import { InteractionStatus } from "@azure/msal-browser";
+import { useSetUser } from "../auth";
+import { msalInstance } from "../auth/msalConfig";
+import { Button, Container, Title, Alert } from "@mantine/core";
+import { Grid, Text, Flex } from "@mantine/core";
 import LoginOverlay from "../components/login-overlay";
 import useTitle from "../hooks/useTitle";
 import { CategoryList } from "./home-page";
 
-const LoginPage: React.FC<{ isHome: boolean }> = ({ isHome = false }) => {
+const LoginPage: React.FC<{ isHome: boolean }> = ({ isHome }) => {
   useTitle("Login");
+  const setUser = useSetUser();
+  const { instance, inProgress } = useMsal();
+
+  const handleLogin = async () => {
+    if (inProgress === InteractionStatus.None) {
+      try {
+        const loginResponse = await instance.loginPopup({
+          scopes: ["user.read"],
+        });
+        const account = loginResponse.account;
+        setUser({
+          loggedin: true,
+          username: account.username,
+          displayname: account.name || account.username,
+          isAdmin: false,
+          isCategoryAdmin: false,
+        });
+      } catch (error) {
+        console.error("Login failed:", error);
+        // Handle login error
+      }
+    } else {
+      console.warn("Login interaction already in progress.");
+    }
+  };
+
+  useEffect(() => {
+    if (inProgress === InteractionStatus.None) {
+      // Clear any interaction state if needed
+    }
+  }, [inProgress]);
+
   return (
     <>
       <Container size="xl">
@@ -44,8 +81,16 @@ const LoginPage: React.FC<{ isHome: boolean }> = ({ isHome = false }) => {
           </Grid.Col>
         </Grid>
       </Container>
+      <Container>
+        <Title order={2}>{isHome ? "Welcome to Community Learning" : "Please log in"}</Title>
+        <Button onClick={handleLogin}>Log in with Microsoft</Button>
+        {inProgress !== InteractionStatus.None && (
+          <Alert color="yellow">Login interaction in progress...</Alert>
+        )}
+      </Container>
       {isHome && <CategoryList />}
     </>
   );
 };
+
 export default LoginPage;

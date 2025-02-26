@@ -15,7 +15,9 @@ root.render(
       adapter={ReactRouter5Adapter}
       options={{ searchStringToObject: parse, objectToSearchString: stringify }}
     >
+      
       <App />
+      
     </QueryParamProvider>
   </BrowserRouter>,
 );

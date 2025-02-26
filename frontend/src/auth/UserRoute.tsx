@@ -11,7 +11,14 @@ const UserRouteContent = <T extends RouteProps>({
   loginProps: Parameters<typeof LoginOverlay>[0];
 }) => {
   const user = useUser();
-  if (user !== undefined && !user.loggedin) {
+  if (props.path === "/") {
+    return (
+      <>
+        <LoadingOverlay visible={user === undefined} />
+        <Route {...props} />
+      </>
+    );
+  } else if (user !== undefined && !user.loggedin) {
     return <LoginOverlay {...loginProps} />;
   } else {
     return (
@@ -22,6 +29,7 @@ const UserRouteContent = <T extends RouteProps>({
     );
   }
 };
+
 const UserRoute = <T extends RouteProps>(props: T) => {
   return (
     <Route exact={props.exact} path={props.path}>
@@ -32,4 +40,5 @@ const UserRoute = <T extends RouteProps>(props: T) => {
     </Route>
   );
 };
+
 export default UserRoute;
