@@ -1,21 +1,20 @@
 import { Card, Text, Progress, Anchor, Stack, Tooltip } from "@mantine/core";
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { authenticated, login } from "../api/fetch-utils";
 import { SearchResult } from "../hooks/useSearch";
 import { CategoryMetaData } from "../interfaces";
 import { highlight } from "../utils/search-utils";
 import classes from "../utils/focus-outline.module.css";
-import {useAuthService} from "../auth/auth-utils";
 
 interface Props {
   category: SearchResult<CategoryMetaData> | CategoryMetaData;
 }
 const CategoryCard: React.FC<Props> = ({ category }) => {
   const history = useHistory();
-  const authService = useAuthService()
   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.code === "Enter") {
-      if (!authService.isLoggedIn()) authService.handleLogin(`/category/${category.slug}`);
+      if (!authenticated()) login(`/category/${category.slug}`);
       else history.push(`/category/${category.slug}`);
     }
   };
@@ -24,9 +23,9 @@ const CategoryCard: React.FC<Props> = ({ category }) => {
       component={Link}
       to={`/category/${category.slug}`}
       onClick={e => {
-        if (!authService.isLoggedIn()) {
+        if (!authenticated()) {
           e.preventDefault();
-          authService.handleLogin(`/category/${category.slug}`);
+          login(`/category/${category.slug}`);
         }
       }}
       withBorder

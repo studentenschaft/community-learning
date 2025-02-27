@@ -9,6 +9,7 @@ import {
   Title,
 } from "@mantine/core";
 import React, { ReactNode } from "react";
+import { logout } from "../api/fetch-utils";
 import { useSetUser, useUser } from "../auth";
 import { UserInfo } from "../interfaces";
 import {
@@ -22,7 +23,6 @@ import {
   IconPencilCog,
   IconProps,
 } from "@tabler/icons-react";
-import {useAuthService} from "../auth/auth-utils";
 
 interface UserScoreCardProps {
   username?: string;
@@ -67,8 +67,7 @@ const UserScoreCard: React.FC<UserScoreCardProps> = ({
 }) => {
   const setUser = useSetUser();
   const user = useUser()!;
-    const { handleLogout } = useAuthService();
-    return (
+  return (
     <>
       <Group justify="space-between" my="lg">
         <Title order={1}>{userInfo?.displayName || username}</Title>
@@ -91,7 +90,7 @@ const UserScoreCard: React.FC<UserScoreCardProps> = ({
                   : "View with admin privileges"}
               </Button>
             )}
-            <Button leftSection={<IconLogout />} onClick={() => handleLogout("/")}>
+            <Button leftSection={<IconLogout />} onClick={() => logout("/")}>
               Log out
             </Button>
           </Group>
