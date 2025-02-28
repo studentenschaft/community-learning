@@ -24,6 +24,11 @@ export default defineConfig({
         changeOrigin: false,
         secure: false,
       },
+      "/auth": {
+        target: `http://${process.env.BACKEND_HOST ?? "localhost"}:8081`,
+        changeOrigin: false,
+        secure: false,
+      },
     },
   },
   css: {

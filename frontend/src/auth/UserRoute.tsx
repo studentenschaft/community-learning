@@ -2,6 +2,7 @@ import { Route, RouteProps } from "react-router-dom";
 import { useUser } from ".";
 import LoadingOverlay from "../components/loading-overlay";
 import LoginOverlay from "../pages/login-page";
+import React from "react";
 
 const UserRouteContent = <T extends RouteProps>({
   props,
@@ -11,7 +12,14 @@ const UserRouteContent = <T extends RouteProps>({
   loginProps: Parameters<typeof LoginOverlay>[0];
 }) => {
   const user = useUser();
-  if (user !== undefined && !user.loggedin) {
+  if (props.path === "/") {
+    return (
+      <>
+        <LoadingOverlay visible={user === undefined} />
+        <Route {...props} />
+      </>
+    );
+  } else if (user !== undefined && !user.loggedin) {
     return <LoginOverlay {...loginProps} />;
   } else {
     return (
@@ -22,6 +30,7 @@ const UserRouteContent = <T extends RouteProps>({
     );
   }
 };
+
 const UserRoute = <T extends RouteProps>(props: T) => {
   return (
     <Route exact={props.exact} path={props.path}>
@@ -32,4 +41,5 @@ const UserRoute = <T extends RouteProps>(props: T) => {
     </Route>
   );
 };
+
 export default UserRoute;

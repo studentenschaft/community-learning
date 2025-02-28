@@ -93,6 +93,8 @@ services:
       - SIP_AUTH_OIDC_TOKEN_ENDPOINT=https://auth.vseth.ethz.ch/auth/realms/VSETH/protocol/openid-connect/token
 
       - PDEP_IS_PREVIEW=TRUE
+    env_file:
+      - .env
     depends_on:
       postgres:
           condition: service_healthy

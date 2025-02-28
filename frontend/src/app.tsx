@@ -23,7 +23,7 @@ import {
   minValidity,
   refreshToken,
 } from "./api/fetch-utils";
-import { notLoggedIn, SetUserContext, User, UserContext } from "./auth";
+import { notLoggedIn, SetUserContext, User, UserContext, AuthProvider } from "./auth";
 import UserRoute from "./auth/UserRoute";
 import { DebugContext, defaultDebugOptions } from "./components/Debug";
 import DebugModal from "./components/Debug/DebugModal";
@@ -231,111 +231,113 @@ const App: React.FC<{}> = () => {
 
   return (
     <MantineProvider theme={fvTheme} cssVariablesResolver={resolver}>
-      <Modal
-        opened={loggedOut}
-        onClose={() => login()}
-        title="You've been logged out due to inactivity"
-      >
-        <Text mb="md">
-          Your session has expired due to inactivity, you have to log in again
-          to continue.
-        </Text>
-        <Button size="lg" variant="outline" onClick={() => login()}>
-          Sign in with AAI
-        </Button>
-      </Modal>
-      <Route component={HashLocationHandler} />
-      <DebugContext.Provider value={debugOptions}>
-        <UserContext.Provider value={user}>
-          <SetUserContext.Provider value={setUser}>
-            <div>
+      <AuthProvider>
+        <Modal
+          opened={loggedOut}
+          onClose={() => login()}
+          title="You've been logged out due to inactivity"
+        >
+          <Text mb="md">
+            Your session has expired due to inactivity, you have to log in again
+            to continue.
+          </Text>
+          <Button size="lg" variant="outline" onClick={() => login()}>
+            Sign in with AAI
+          </Button>
+        </Modal>
+        <Route component={HashLocationHandler} />
+        <DebugContext.Provider value={debugOptions}>
+          <UserContext.Provider value={user}>
+            <SetUserContext.Provider value={setUser}>
               <div>
-                <BottomHeader
-                  lang={"en"}
-                  appNav={bottomHeaderNav}
-                  title={"Community Learning"}
-                  size="xl"
+                <div>
+                  <BottomHeader
+                    lang={"en"}
+                    appNav={bottomHeaderNav}
+                    title={"Community Learning"}
+                    size="xl"
+                  />
+                  <MobileHeader
+                    signet="https://biddit.app/static/media/SHSG_Logo_Icon_Title_small_white.79a3fc7c.png"
+                    selectedLanguage={"en"}
+                    appNav={bottomHeaderNav}
+                    title={"Community Learning"}
+                  />
+                  <Box component="main" mt="2em">
+                    <Switch>
+                      <Route exact path="/" component={HomePage} />
+                      <Route exact path="/login" component={LoginPage} />
+                      <UserRoute
+                        exact
+                        path="/uploadpdf"
+                        component={UploadPdfPage}
+                      />
+                      <UserRoute
+                        exact
+                        path="/submittranscript"
+                        component={UploadTranscriptPage}
+                      />
+                      <UserRoute exact path="/faq" component={FAQ} />
+                      <UserRoute
+                        exact
+                        path="/feedback"
+                        component={FeedbackPage}
+                      />
+                      <UserRoute
+                        exact
+                        path="/category/:slug"
+                        component={CategoryPage}
+                      />
+                      <UserRoute
+                        exact
+                        path="/user/:author/document/:slug"
+                        component={DocumentPage}
+                      />
+                      <UserRoute
+                        exact
+                        path="/exams/:filename"
+                        component={ExamPage}
+                      />
+                      <UserRoute
+                        exact
+                        path="/user/:username"
+                        component={UserPage}
+                      />
+                      <UserRoute exact path="/user/" component={UserPage} />
+                      <UserRoute exact path="/search/" component={SearchPage} />
+                      <UserRoute
+                        exact
+                        path="/scoreboard"
+                        component={Scoreboard}
+                      />
+                      <UserRoute exact path="/modqueue" component={ModQueue} />
+                      <Route component={NotFoundPage} />
+                    </Switch>
+                  </Box>
+                </div>
+                <Footer
+                  logo={data.logo ?? defaultConfigOptions.logo}
+                  disclaimer={data.disclaimer ?? defaultConfigOptions.disclaimer}
+                  privacy={data.privacy ?? defaultConfigOptions.privacy}
                 />
-                <MobileHeader
-                  signet="https://biddit.app/static/media/SHSG_Logo_Icon_Title_small_white.79a3fc7c.png"
-                  selectedLanguage={"en"}
-                  appNav={bottomHeaderNav}
-                  title={"Community Learning"}
-                />
-                <Box component="main" mt="2em">
-                  <Switch>
-                    <UserRoute exact path="/" component={HomePage} />
-                    <Route exact path="/login" component={LoginPage} />
-                    <UserRoute
-                      exact
-                      path="/uploadpdf"
-                      component={UploadPdfPage}
-                    />
-                    <UserRoute
-                      exact
-                      path="/submittranscript"
-                      component={UploadTranscriptPage}
-                    />
-                    <UserRoute exact path="/faq" component={FAQ} />
-                    <UserRoute
-                      exact
-                      path="/feedback"
-                      component={FeedbackPage}
-                    />
-                    <UserRoute
-                      exact
-                      path="/category/:slug"
-                      component={CategoryPage}
-                    />
-                    <UserRoute
-                      exact
-                      path="/user/:author/document/:slug"
-                      component={DocumentPage}
-                    />
-                    <UserRoute
-                      exact
-                      path="/exams/:filename"
-                      component={ExamPage}
-                    />
-                    <UserRoute
-                      exact
-                      path="/user/:username"
-                      component={UserPage}
-                    />
-                    <UserRoute exact path="/user/" component={UserPage} />
-                    <UserRoute exact path="/search/" component={SearchPage} />
-                    <UserRoute
-                      exact
-                      path="/scoreboard"
-                      component={Scoreboard}
-                    />
-                    <UserRoute exact path="/modqueue" component={ModQueue} />
-                    <Route component={NotFoundPage} />
-                  </Switch>
-                </Box>
               </div>
-              <Footer
-                logo={data.logo ?? defaultConfigOptions.logo}
-                disclaimer={data.disclaimer ?? defaultConfigOptions.disclaimer}
-                privacy={data.privacy ?? defaultConfigOptions.privacy}
-              />
-            </div>
-          </SetUserContext.Provider>
-        </UserContext.Provider>
-      </DebugContext.Provider>
-      {process.env.NODE_ENV === "development" && (
-        <>
-          <Affix position={{ bottom: rem(10), left: rem(10) }}>
-            <Button onClick={toggleDebugPanel}>DEBUG</Button>
-          </Affix>
-          <DebugModal
-            isOpen={debugPanel}
-            onClose={closeDebugPanel}
-            debugOptions={debugOptions}
-            setDebugOptions={setDebugOptions}
-          />
-        </>
-      )}
+            </SetUserContext.Provider>
+          </UserContext.Provider>
+        </DebugContext.Provider>
+        {process.env.NODE_ENV === "development" && (
+          <>
+            <Affix position={{ bottom: rem(10), left: rem(10) }}>
+              <Button onClick={toggleDebugPanel}>DEBUG</Button>
+            </Affix>
+            <DebugModal
+              isOpen={debugPanel}
+              onClose={closeDebugPanel}
+              debugOptions={debugOptions}
+              setDebugOptions={setDebugOptions}
+            />
+          </>
+        )}
+      </AuthProvider>
     </MantineProvider>
   );
 };

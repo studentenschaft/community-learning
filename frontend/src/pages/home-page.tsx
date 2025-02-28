@@ -137,25 +137,29 @@ const AddCategory: React.FC<{ onAddCategory: () => void }> = ({
   );
 };
 
-const HomePage: React.FC<{}> = () => {
-  useTitle("Home");
-  return (
-    <>
-      <Container size="xl">
-        <Title mb="sm">Community Learning by SHSG</Title>
-      </Container>
-      <CategoryList />
-    </>
-  );
-};
 export const CategoryList: React.FC<{}> = () => {
-  const { isAdmin } = useUser() as User;
+  const user = useUser();
+  const { isAdmin } = user as User;
   const [mode, setMode] = useLocalStorageState("mode", "alphabetical");
   const [filter, setFilter] = useState("");
   const { data, error, loading, run } = useRequest(loadCategoryData, {
     cacheKey: "category-data",
   });
-  const [categoriesWithDefault, metaCategories] = data ? data : [];
+  const [categoriesWithDefault, metaCategories] = data ? data : [[], []];
+
+  // Add loading state for authentication
+  if (!user) {
+    return <Loader />;
+  }
+
+  // Add error handling for authentication failures
+  if (!user.loggedin) {
+    return (
+      <Alert color="red">
+        Authentication failed. Please <a href="/login">login</a> again.
+      </Alert>
+    );
+  }
 
   const categories = useMemo(
     () =>
@@ -163,7 +167,7 @@ export const CategoryList: React.FC<{}> = () => {
         ? categoriesWithDefault.filter(
             ({ slug }) => slug !== "default" || isAdmin,
           )
-        : undefined,
+        : [],
     [categoriesWithDefault, isAdmin],
   );
   const searchResult = useSearch(
@@ -176,7 +180,7 @@ export const CategoryList: React.FC<{}> = () => {
     () =>
       metaCategories && categories
         ? mapToCategories(categories, metaCategories)
-        : [undefined, undefined],
+        : [[], []],
     [categories, metaCategories],
   );
 
@@ -299,4 +303,17 @@ export const CategoryList: React.FC<{}> = () => {
     </>
   );
 };
+
+const HomePage: React.FC<{}> = () => {
+  useTitle("Home");
+  return (
+    <>
+      <Container size="xl">
+        <Title mb="sm">Community Learning by SHSG</Title>
+      </Container>
+      <CategoryList />
+    </>
+  );
+};
+
 export default HomePage;
