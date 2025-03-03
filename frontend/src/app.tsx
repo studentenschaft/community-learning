@@ -264,7 +264,7 @@ const App: React.FC<{}> = () => {
                   appNav={bottomHeaderNav}
                   title={"Community Learning"}
                 />
-                <Box component="main" mt="2em">
+                <Box component="main" mt="2em" style={{paddingTop: 'calc(4.5rem + 1em)'}}>
                   <Switch>
                     <UserRoute exact path="/" component={HomePage} />
                     <Route exact path="/login" component={LoginPage} />
