@@ -21,7 +21,7 @@ def index(request):
 
 
 def favicon(request):
-    return response.send_file("favicon.ico")
+    return response.send_file("favicon.svg")
 
 
 def manifest(request):

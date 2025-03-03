@@ -1,9 +1,9 @@
 {
   "short_name": "Exams",
-  "name": "Community Solutions",
+  "name": "Community Learning",
   "icons": [
     {
-      "src": "https://biddit.app/static/media/SHSG_Logo_Icon_Title_small_white.79a3fc7c.png",
+      "src": "/favicon.svg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/png"
     }

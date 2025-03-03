@@ -48,7 +48,7 @@ const BottomHeader: React.FC<Props> = ({
             src={
               signet
                 ? signet
-                : "https://biddit.app/static/media/SHSG_Logo_Icon_Title_small_white.79a3fc7c.png"
+                : "favicon.svg"
             }
             alt="Signet of the student organization"
             className={classes.logo}
