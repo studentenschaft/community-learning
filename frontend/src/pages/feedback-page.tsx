@@ -43,7 +43,7 @@ const FeedbackForm: React.FC<{}> = () => {
     <Stack>
       {success && <Alert>Feedback was submitted successfully.</Alert>}
       <Text>
-        Please tell us what you think about Community Solutions! What do you
+        Please tell us what you think about Community Learning! What do you
         like? What could we improve? Ideas for new features? Use the form below
         or write to{" "}
         <Anchor
