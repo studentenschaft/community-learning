@@ -13,10 +13,10 @@ const LoginPage: React.FC<{ isHome: boolean }> = ({ isHome = false }) => {
           <Grid.Col span={{ md: 5 }}>
             <Flex direction="column" justify="center">
               <Text size="4.5rem" lh={1.2} my="lg">
-                Community Solutions
+                Community Learning
               </Text>
               <Text size="lg" fw={500}>
-                Community Solutions is a platform for students that allows them
+                Community Learning is a platform for students that allows them
                 to share answers of previous exams, comment on answers and
                 upload summaries.
               </Text>

@@ -96,7 +96,7 @@ FRONTEND_SERVER_DATA = {
     or "https://account.vseth.ethz.ch/privacy",
 }
 
-FAVICON_URL = os.environ.get("FRONTEND_FAVICON_URL", "/favicon.ico")
+FAVICON_URL = os.environ.get("FRONTEND_FAVICON_URL", "/favicon.svg")
 IS_PREVIEW = os.environ.get("PDEP_IS_PREVIEW", "") == "TRUE"
 
 

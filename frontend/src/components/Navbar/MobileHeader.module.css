@@ -3,6 +3,11 @@
   color: var(--mantine-color-white);
   width: 100%;
   box-shadow: var(--mantine-shadow-sm);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .navItem {
@@ -16,6 +21,7 @@
 .logo {
   height: 2rem;
   padding-right: 1.25rem;
+  filter: brightness(0) invert(1);
 }
 
 .title {

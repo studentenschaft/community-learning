@@ -226,6 +226,8 @@ const App: React.FC<{}> = () => {
       "--custom-segmented-control-background": "var(--mantine-color-dark-6)",
       // Segmented control indicator
       "--sc-color": "var(--mantine-color-dark-8)",
+      "--mantine-color-brand-filled": "var(--mantine-color-brand-6)",
+      "--mantine-color-brand-outline": "var(--mantine-color-brand-6)",
     },
   });
 
@@ -257,12 +259,12 @@ const App: React.FC<{}> = () => {
                   size="xl"
                 />
                 <MobileHeader
-                  signet="https://biddit.app/static/media/SHSG_Logo_Icon_Title_small_white.79a3fc7c.png"
+                  signet="favicon.svg"
                   selectedLanguage={"en"}
                   appNav={bottomHeaderNav}
                   title={"Community Learning"}
                 />
-                <Box component="main" mt="2em">
+                <Box component="main" mt="2em" style={{paddingTop: 'calc(4.5rem + 1em)'}}>
                   <Switch>
                     <UserRoute exact path="/" component={HomePage} />
                     <Route exact path="/login" component={LoginPage} />

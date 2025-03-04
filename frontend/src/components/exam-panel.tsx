@@ -79,7 +79,7 @@ const ExamPanel: React.FC<ExamPanelProps> = ({
       ? editState.snap
       : true;
   const reportProblem = useCallback(() => {
-    const subject = encodeURIComponent("Community Solutions: Feedback");
+    const subject = encodeURIComponent("Community Learning: Feedback");
     const body = encodeURIComponent(
       `Concerning the exam '${metaData.displayname}' of the course '${metaData.category_displayname}' ...`,
     );
