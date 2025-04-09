@@ -14,7 +14,9 @@ auth:
     accessType: confidential
     clientProtocol: openid-connect
     validRedirectURIs:
-      - https://exams.com.staging-sip.ethz.ch/*
+      # - https://community-learning.shsg.ch/api/auth/callback
+      - https://community-learning.shsg.ch/*
+      # - https://exams.com.staging-sip.ethz.ch/*
     scopes:
       defaultClientScopes:
         - profile
